@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc"
+	xmlns:mybatis-spring="http://mybatis.org/schema/mybatis-spring"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/jdbc http://www.springframework.org/schema/jdbc/spring-jdbc-4.3.xsd
+		http://mybatis.org/schema/mybatis-spring http://mybatis.org/schema/mybatis-spring-1.2.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+<!-- Namespace탭 에서 aop context jdbc mybatis tx를 선택해준다. -->
+
+<!-- 스프링 JDBC -->	
+<bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+<!-- id : 객체명 나중에 해당이름으로 불러오거나 참조할때 사용 . (마이바티스에서 사용할것임.)
+	 class : 해당객체의 클래스에 대한 정보가담김 
+	 		-> org.springframework.jdbc.datasource는 패키지경로
+			-> DriverManagerDataSource는 클래스명  -->
+	<property name="driverClassName" value="oracle.jdbc.OracleDriver"/>
+	<!-- driverClassName멤버변수에 value속성값을 저장 -->
+	<property name="url" value="jdbc:oracle:thin:@127.0.0.1:1521:xe"/>
+	<!-- 오라클 접속주소, 1521은 포트번호,xe는 DB명 -->
+	<property name="username" value="week"/><!-- 오라클 접속 사용자 -->
+	<property name="password" value="week"/><!-- 비밀번호 -->
+</bean><!-- bean이 자바클래스 단위. id명인 dataSource는 자바언어에서  객체명에 해당된다. -->
+
+
+<!-- Spring jdbc와 마이바티스를 연결, mybatis환경설정과 매퍼태그 설정 -->
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"/>
+			<!-- 스프링의 setter()메서드를 통한 의존성 주입. 그러면 dataSource변수에 ref 빈 아이디 dataSource를 호출해서 사용되게함. -->
+		<property name="configLocation" value="classpath:/mybatis-config.xml"/>
+		<!-- mybatis-config.xml파일의 역할을 데이터 저장빈 클래스 객체 별칭을 관리한다.
+		classpath경로는 이클립스 가상경로로 src/main/resources이고, 실제 톰캣 경로로는 /WEB-INF/classe경로를 뜻한다. -->
+	</bean>
+</beans>
